@@ -1,4 +1,3 @@
-
 interface Traceback {
   filename: string;
   lineno: number;
