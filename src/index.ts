@@ -83,7 +83,7 @@ function assumeLatestVersion(branches: string[]): string {
   return latest;
 }
 
-export async function handleRequest(request: Request, env: Env): Promise<Response> {
+async function _handleRequest(request: Request, env: Env): Promise<Response> {
   if (new URL(request.url).pathname != "" && request.method != "POST") {
     return new Response('Not found', { status: 404 })
   }
@@ -124,6 +124,12 @@ export async function handleRequest(request: Request, env: Env): Promise<Respons
     headers: {
       "content-type": "application/json;charset=UTF-8",
     }})
+}
+
+export async function handleRequest(request: Request, env: Env): Promise<Response> {
+  const response = await _handleRequest(request, env);
+  response.headers.set("Access-Control-Allow-Origin", "*");
+  return response;
 }
 
 const worker: ExportedHandler<Env> = { fetch: handleRequest };
