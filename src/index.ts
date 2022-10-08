@@ -52,7 +52,7 @@ function parse(traceback: string): Traceback[] {
 async function getSimilarity(tracebacks: Traceback[], version: string = "master") {
   const matches: Result[] = [];
   for (const traceback of tracebacks) {
-      const res = await fetch(`https://raw.githubusercontent.com/nextcord/nextcord/${version}/${traceback.filename}`);
+      const res = await fetch(`https://raw.githubusercontent.com/nextcord/nextcord/${version}/${traceback.filename}`, { cf: { cacheEverything: true } });
       var got = (await res.text()).split('\n')[traceback.lineno - 1];
       if (got === undefined) {
         continue;
