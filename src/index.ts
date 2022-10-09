@@ -88,19 +88,18 @@ async function _handleRequest(request: Request, env: Env): Promise<Response> {
     return new Response('Not found', { status: 404 })
   }
   const traceback = await request.text();
-  const response = await fetch("https://api.github.com/repos/nextcord/nextcord/branches", {
+  const response = await fetch("https://api.github.com/repos/nextcord/nextcord/tags", {
     headers: {
       "User-Agent": "tracedcord-api server",
     }
   })
-  const branches = await response.json();
+  const tags = await response.json();
   
 
   // @ts-ignore
-  const branchNames: string[] = branches.map(branch => branch.name).filter(branch => branch.startsWith("v"));
-  console.log(branchNames)
+  const versions: string[] = tags.map(branch => branch.name).filter(branch => branch.startsWith("v"));
   const tracebacks = parse(traceback)
-  const results = await Promise.all(branchNames.map(async (branch: string) => {
+  const results = await Promise.all(versions.map(async (branch: string) => {
     return [branch, await getSimilarity(tracebacks, branch)]
     
   }))
@@ -114,7 +113,7 @@ async function _handleRequest(request: Request, env: Env): Promise<Response> {
     const bSame = b[1].filter(result => result.same).length;
     return bSame - aSame;
   })
-  const latest = assumeLatestVersion(branchNames);
+  const latest = assumeLatestVersion(versions);
   const flattened = Object.assign({}, ...sorted.map((e) => {
   // @ts-ignore
   return {[e[0]]: e[1]}
