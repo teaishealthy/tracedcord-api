@@ -38,6 +38,6 @@
   },
   "dependencies": {
     "jest-environment-miniflare": "^2.11.0",
-    "octokit": "^2.0.9"
+    "octokit": "^2.0.10"
   }
 }
